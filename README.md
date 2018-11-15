@@ -2,7 +2,7 @@ DS-JSON
 ========
 DS-PROTOTYP JSON DE-SERIALIZATION LIBRARY
 -------------------------------------
-<sup>And some other funky conversions like base-64 and Latin-1 to/from UTF8</sup>
+<sup>And some other funky character conversion stuff, like Base-64 and Latin-1 to/from UTF-8</sup>
 
 **Resource optimized for small 8-bit and 32-bit microcontrollers.**
 
@@ -26,10 +26,10 @@ DS-PROTOTYP JSON DE-SERIALIZATION LIBRARY
 * Configurable data sizes for number representation
 
 **Resource requirements:**
-* Minimal memory requirements (Not 32 bytes of RAM)
+* Minimal memory requirements (not 32 bytes of RAM)
 * Minimal stack use (non-recursive, few local variables)
 * Minimal program space (compact, lean codebase)
-* Minimal heap use (none, actually)
+* No heap use
 
 **Notes:**
 * Designed for high speed, low foot print - not a rich feature set.
@@ -38,4 +38,4 @@ DS-PROTOTYP JSON DE-SERIALIZATION LIBRARY
 * Requires C99 (-std=c99 for GCC)
 
 **Performance:**
-* Pretty darn good. You get to do the comparisons!
+* Pretty darn good. You do the comparisons!
