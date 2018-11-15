@@ -35,12 +35,13 @@
 #define JSON_OBJECT_END           1
 #define JSON_ARRAY                2
 #define JSON_ARRAY_END            3
-#define JSON_STRING               4
-#define JSON_NUMBER               5
-#define JSON_CONSTANT             6
-#define JSON_NULL                 7
-#define JSON_TRUE                 8
-#define JSON_FALSE                9
+#define JSON_KEY                  4
+#define JSON_STRING               5
+#define JSON_NUMBER               6
+#define JSON_CONSTANT             7
+#define JSON_NULL                 8
+#define JSON_TRUE                 9
+#define JSON_FALSE               10
 
 // Memory compare function (AVR f.ex. requires special procedure for comparing to below ROM strings)
 #define JSON_MEMCMP(RAM, ROM, LENGTH) memcmp(RAM, ROM, LENGTH)
@@ -50,7 +51,7 @@ extern const char json_str_true[];
 extern const char json_str_false[];
 
 // JSON parsing callback
-typedef uint8_t (*json_cb)(uint32_t depth, char * key, uint8_t type, void * value);
+typedef uint8_t (*json_cb)(uint32_t depth, uint8_t type, void * value);
 
 // JSON number representation
 typedef struct {
@@ -70,7 +71,6 @@ typedef struct {
   uint8_t state;
   uint8_t stack[(JSON_NESTING + 7) / 8];
   uint16_t stack_depth;
-  char * key;
 } json_grammar_ctx;
 
 typedef struct {

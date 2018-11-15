@@ -1,20 +1,21 @@
 #include <stdlib.h>
 
 // Callback to print parsed JSON to screen
-uint8_t print_json(uint32_t depth, char * key, uint8_t type, void * value) {
+uint8_t print_json(uint32_t depth, uint8_t type, void * value) {
   uint8_t n;
-  for(n = 0; n < depth; n++) printf("  ");
-  if(key) printf("\"%s\" : ", key);
+  static bool was_key = false;
+  if(!was_key) for(n = 0; n < depth; n++) printf("  ");
+  was_key = false;  
   switch(type) {
-    case JSON_OBJECT:     printf("{"); break;
-    case JSON_OBJECT_END: printf("}"); break;
-    case JSON_ARRAY:      printf("["); break;
-    case JSON_ARRAY_END:  printf("]"); break;
-    case JSON_STRING:     printf("\"%s\"", json_to_string(value)); break;
-    case JSON_NUMBER:     printf("%0.10g", json_to_double(value)); break;
-    default:              printf("%s", json_const_str(type));
+    case JSON_OBJECT:     printf("{\n"); break;
+    case JSON_OBJECT_END: printf("}\n"); break;
+    case JSON_ARRAY:      printf("[\n"); break;
+    case JSON_ARRAY_END:  printf("]\n"); break;
+    case JSON_KEY:        printf("\"%s\" : ", json_to_string(value)); was_key = true; break;
+    case JSON_STRING:     printf("\"%s\"\n", json_to_string(value)); break;
+    case JSON_NUMBER:     printf("%0.10g\n", json_to_double(value)); break;
+    default:              printf("%s\n", json_const_str(type));
   }
-  printf("\n");
   return JSON_OK;
 }
 

@@ -61,13 +61,13 @@ static uint8_t json_parse_grammar(char type, json_parser_ctx *parser_ctx) {
     // OBJECT BEGINS
     if(state == GSTATE_ENTER) {
       state = GSTATE_OBJECT_IN;
-      if(parser_ctx->callback) error = parser_ctx->callback(0, NULL, JSON_OBJECT, NULL);
+      if(parser_ctx->callback) error = parser_ctx->callback(0, JSON_OBJECT, NULL);
     } else if (state == GSTATE_ARRAY_IN || state == GSTATE_ARRAY_PRE) {
       state = GSTATE_OBJECT_IN;
-      if(parser_ctx->callback) error = parser_ctx->callback(ctx->stack_depth, NULL, JSON_OBJECT, NULL);
+      if(parser_ctx->callback) error = parser_ctx->callback(ctx->stack_depth, JSON_OBJECT, NULL);
     } else if(state == GSTATE_OBJECT_PRE) {
       state = GSTATE_OBJECT_IN;
-      if(parser_ctx->callback) error = parser_ctx->callback(ctx->stack_depth, ctx->key, JSON_OBJECT, NULL);
+      if(parser_ctx->callback) error = parser_ctx->callback(ctx->stack_depth, JSON_OBJECT, NULL);
     } else return JSON_BAD_GRAMMAR;
     
     if(ctx->stack_depth >= JSON_NESTING) return JSON_TOO_DEEP;
@@ -79,7 +79,7 @@ static uint8_t json_parse_grammar(char type, json_parser_ctx *parser_ctx) {
     // OBJECT ENDS
     if(state != GSTATE_OBJECT_IN && state != GSTATE_OBJECT_POST) return JSON_BAD_GRAMMAR;
     ctx->stack_depth--;
-    if(parser_ctx->callback) error = parser_ctx->callback(ctx->stack_depth, NULL, JSON_OBJECT_END, NULL);
+    if(parser_ctx->callback) error = parser_ctx->callback(ctx->stack_depth, JSON_OBJECT_END, NULL);
     if(ctx->stack_depth == 0) {
       state = GSTATE_EXIT;
     } else if((ctx->stack[(ctx->stack_depth - 1) >> 3] & (1 << ((ctx->stack_depth - 1) & 0x07))) == 0) {
@@ -93,13 +93,13 @@ static uint8_t json_parse_grammar(char type, json_parser_ctx *parser_ctx) {
     // ARRAY BEGINS
     if(state == GSTATE_ENTER) {
       state = GSTATE_ARRAY_IN;
-      if(parser_ctx->callback) error = parser_ctx->callback(0, NULL, JSON_ARRAY, NULL);
+      if(parser_ctx->callback) error = parser_ctx->callback(0, JSON_ARRAY, NULL);
     } else if (state == GSTATE_ARRAY_IN || state == GSTATE_ARRAY_PRE) {
       state = GSTATE_ARRAY_IN;
-      if(parser_ctx->callback) error = parser_ctx->callback(ctx->stack_depth, NULL, JSON_ARRAY, NULL);
+      if(parser_ctx->callback) error = parser_ctx->callback(ctx->stack_depth, JSON_ARRAY, NULL);
     } else if(state == GSTATE_OBJECT_PRE) {
       state = GSTATE_ARRAY_IN;
-      if(parser_ctx->callback) error = parser_ctx->callback(ctx->stack_depth, ctx->key, JSON_ARRAY, NULL);
+      if(parser_ctx->callback) error = parser_ctx->callback(ctx->stack_depth, JSON_ARRAY, NULL);
     } else return JSON_BAD_GRAMMAR;
     if(ctx->stack_depth >= JSON_NESTING) return JSON_TOO_DEEP;
     ctx->stack[(ctx->stack_depth >> 3)] &= ~(1 << (ctx->stack_depth & 0x07));
@@ -110,7 +110,7 @@ static uint8_t json_parse_grammar(char type, json_parser_ctx *parser_ctx) {
     // ARRAY ENDS
     if(state != GSTATE_ARRAY_IN && state != GSTATE_ARRAY_POST) return JSON_BAD_GRAMMAR;
     ctx->stack_depth--;
-    if(parser_ctx->callback) error = parser_ctx->callback(ctx->stack_depth, NULL, JSON_ARRAY_END, NULL);
+    if(parser_ctx->callback) error = parser_ctx->callback(ctx->stack_depth, JSON_ARRAY_END, NULL);
     if(ctx->stack_depth == 0) {
       state = GSTATE_EXIT;
     } else if((ctx->stack[(ctx->stack_depth - 1) >> 3] & (1 << ((ctx->stack_depth - 1) & 0x07))) == 0) {
@@ -140,15 +140,15 @@ static uint8_t json_parse_grammar(char type, json_parser_ctx *parser_ctx) {
     // STRING
     if(state == GSTATE_ENTER) {
       state = GSTATE_EXIT;
-      if(parser_ctx->callback) error = parser_ctx->callback(0, NULL, JSON_STRING, &parser_ctx->u.s);
+      if(parser_ctx->callback) error = parser_ctx->callback(0, JSON_STRING, &parser_ctx->u.s);
     } else if(state == GSTATE_ARRAY_IN || state == GSTATE_ARRAY_PRE) {
       state = GSTATE_ARRAY_POST;
-      if(parser_ctx->callback) error = parser_ctx->callback(ctx->stack_depth, NULL, JSON_STRING, &parser_ctx->u.s);
+      if(parser_ctx->callback) error = parser_ctx->callback(ctx->stack_depth, JSON_STRING, &parser_ctx->u.s);
     } else if(state == GSTATE_OBJECT_PRE) {
       state = GSTATE_OBJECT_POST;
-      if(parser_ctx->callback) error = parser_ctx->callback(ctx->stack_depth, ctx->key, JSON_STRING, &parser_ctx->u.s);
+      if(parser_ctx->callback) error = parser_ctx->callback(ctx->stack_depth, JSON_STRING, &parser_ctx->u.s);
     } else if(state == GSTATE_OBJECT_IN || state == GSTATE_OBJECT_KEY) {
-      ctx->key = (char *)parser_ctx->u.s.string;
+      if(parser_ctx->callback) error = parser_ctx->callback(ctx->stack_depth, JSON_KEY, &parser_ctx->u.s);
       state = GSTATE_OBJECT_ASSIGN;
     } else return JSON_BAD_GRAMMAR;
     
@@ -157,13 +157,13 @@ static uint8_t json_parse_grammar(char type, json_parser_ctx *parser_ctx) {
     // NUMBER
     if(state == GSTATE_ENTER) {
       state = GSTATE_EXIT;
-      if(parser_ctx->callback) error = parser_ctx->callback(0, NULL, JSON_NUMBER, &parser_ctx->u.n);
+      if(parser_ctx->callback) error = parser_ctx->callback(0, JSON_NUMBER, &parser_ctx->u.n);
     } else if (state == GSTATE_ARRAY_IN || state == GSTATE_ARRAY_PRE) {
       state = GSTATE_ARRAY_POST;
-      if(parser_ctx->callback) error = parser_ctx->callback(ctx->stack_depth, NULL, JSON_NUMBER, &parser_ctx->u.n);
+      if(parser_ctx->callback) error = parser_ctx->callback(ctx->stack_depth, JSON_NUMBER, &parser_ctx->u.n);
     } else if(state == GSTATE_OBJECT_PRE) {
       state = GSTATE_OBJECT_POST;
-      if(parser_ctx->callback) error = parser_ctx->callback(ctx->stack_depth, ctx->key, JSON_NUMBER, &parser_ctx->u.n);
+      if(parser_ctx->callback) error = parser_ctx->callback(ctx->stack_depth, JSON_NUMBER, &parser_ctx->u.n);
     } else return JSON_BAD_GRAMMAR;
     
   } else if(type == 'C') {
@@ -179,13 +179,13 @@ static uint8_t json_parse_grammar(char type, json_parser_ctx *parser_ctx) {
 
     if(state == GSTATE_ENTER) {
       state = GSTATE_EXIT;
-      if(parser_ctx->callback) error = parser_ctx->callback(0, NULL, type, NULL);
+      if(parser_ctx->callback) error = parser_ctx->callback(0, type, NULL);
     } else if(state == GSTATE_ARRAY_IN || state == GSTATE_ARRAY_PRE) {
       state = GSTATE_ARRAY_POST;
-      if(parser_ctx->callback) error = parser_ctx->callback(ctx->stack_depth, NULL, type, NULL);
+      if(parser_ctx->callback) error = parser_ctx->callback(ctx->stack_depth, type, NULL);
     } else if(state == GSTATE_OBJECT_PRE) {
       state = GSTATE_OBJECT_POST;
-      if(parser_ctx->callback) error = parser_ctx->callback(ctx->stack_depth, ctx->key, type, NULL);
+      if(parser_ctx->callback) error = parser_ctx->callback(ctx->stack_depth, type, NULL);
     } else return JSON_BAD_GRAMMAR;
   }
 

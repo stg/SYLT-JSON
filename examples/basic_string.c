@@ -8,8 +8,6 @@ int main() {
   char json[] = "[null,-1.23000456789e+2,false,\"Sing ♪ a \\u266B song\",{\"var\":[0.0,1.500,2,{}]}]";
   uint8_t result;
   
-  printf("%u", sizeof(json_parser_ctx));
-  
   printf("Output:\n");
   
   // Decode JSON in-place (will modify string)
