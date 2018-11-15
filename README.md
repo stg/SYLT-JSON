@@ -4,7 +4,7 @@ DS-PROTOTYP JSON DE-SERIALIZATION LIBRARY
 -------------------------------------
 <sup>And some other funky character conversion stuff, like Base-64 and Latin-1 to/from UTF-8</sup>
 
-**Resource optimized for small 8-bit and 32-bit microcontrollers.**
+**Resource optimized for small 8-bit and 32-bit microcontrollers**
 
 **Authors:**
 * D. Taylor 2018 (gmail: senseitg)
@@ -17,6 +17,7 @@ DS-PROTOTYP JSON DE-SERIALIZATION LIBRARY
 * No dynamic memory allocation
 * Delivers decoded data via callback
 * Handles JSON in RAM as well as streaming JSON
+* Designed for UTF-8
 * Fully compliant and well tested
 
 **Options (*.h):**
@@ -35,6 +36,8 @@ DS-PROTOTYP JSON DE-SERIALIZATION LIBRARY
 * Designed for high speed, low foot print - not a rich feature set.
 
 **Caveats:**
+* Does not handle UTF-16
+* No UTF-8 error checking - strings delivered as is
 * Requires C99 (-std=c99 for GCC)
 
 **Performance:**
