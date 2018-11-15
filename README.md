@@ -1,6 +1,6 @@
 SYLT-JSON
 ========
-DEVSOUND JSON LOW-LEVEL PARSING LIBRARY
+DEVSOUND LOW-LEVEL JSON PARSING LIBRARY
 -------------------------------------
 <sup>And some other funky character conversion stuff, like Base-64 and Latin-1 to/from UTF-8</sup>
 
