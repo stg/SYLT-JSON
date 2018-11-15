@@ -57,13 +57,13 @@ Or it takes a stream of JSON data:
 ```C
 char jsbuf[32]; // String extraction buffer
 json_parser_ctx ctx = json_stream(jsbuf, sizeof(jsbuf), print_json);
-while(*p_json) {
-  result = json_octet(&ctx, *p_json++);
+while(!stream_eof()) {
+  result = json_octet(&ctx, stream_read());
   if(result) break;
 }
 ```
 
-And delivers its contents to a callback function:
+And delivers its contents to a callback function (syntax changed, see examples):
 
 ```C
 uint8_t print_json(uint32_t depth, char * key, uint8_t type, void * value) {
