@@ -1,6 +1,6 @@
 SYLT-JSON
 ========
-DS-PROTOTYP JSON DE-SERIALIZATION LIBRARY
+DEVSOUND JSON DE-SERIALIZATION LIBRARY
 -------------------------------------
 <sup>And some other funky character conversion stuff, like Base-64 and Latin-1 to/from UTF-8</sup>
 
