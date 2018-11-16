@@ -1,11 +1,11 @@
 #include <stdlib.h>
 
 // Callback to print parsed JSON to screen
-uint8_t print_json(uint32_t depth, uint8_t type, void * value) {
+uint8_t print_json(uint32_t depth, uint8_t type, void * value, void * user) {
   uint8_t n;
   static bool was_key = false;
   if(!was_key) for(n = 0; n < depth; n++) printf("  ");
-  was_key = false;  
+  was_key = false;
   switch(type) {
     case JSON_OBJECT:     printf("{\n"); break;
     case JSON_OBJECT_END: printf("}\n"); break;

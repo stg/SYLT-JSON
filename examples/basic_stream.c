@@ -13,7 +13,7 @@ int main() {
   printf("Output:\n");
     
   // Prepare context for streaming
-  json_parser_ctx ctx = json_stream(jsbuf, sizeof(jsbuf), print_json);
+  json_parser_ctx ctx = json_stream(jsbuf, sizeof(jsbuf), print_json, NULL);
   
   // Stream data to json decoder
   while(*p_json) {

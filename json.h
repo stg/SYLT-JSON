@@ -14,6 +14,10 @@
 #define JSON_EXP_TYPE       uint8_t
 #define JSON_EXP_MAX           0xFF
 
+// JSON number flags
+#define JSON_NFLAG_NUMNEG  (1 << 0)
+#define JSON_NFLAG_EXPNEG  (1 << 1)
+
 // JSON error codes
 #define JSON_OK                   0
 #define JSON_MALFORMED_ESCAPE     1 // Invalid character found in string escape sequence
@@ -51,7 +55,7 @@ extern const char json_str_true[];
 extern const char json_str_false[];
 
 // JSON parsing callback
-typedef uint8_t (*json_cb)(uint32_t depth, uint8_t type, void * value);
+typedef uint8_t (*json_cb)(uint32_t depth, uint8_t type, void * value, void * user);
 
 // JSON number representation
 typedef struct {
@@ -75,6 +79,7 @@ typedef struct {
 
 typedef struct {
   json_cb callback;
+  void * user;
   uint8_t *buffer;
   uint16_t buffer_size;
   uint8_t state;
@@ -102,7 +107,7 @@ bool json_eof(json_parser_ctx * ctx);
 uint8_t json_octet(json_parser_ctx * ctx, uint8_t q);
 
 // JSON return context for streaming
-json_parser_ctx json_stream(char *buffer, uint16_t buffer_size, json_cb callback);
+json_parser_ctx json_stream(char *buffer, uint16_t buffer_size, json_cb callback, void * user);
 
 // JSON in-place parser
-uint8_t json_parse(char *data, size_t length, json_cb callback);
+uint8_t json_parse(char *data, size_t length, json_cb callback, void * user);
